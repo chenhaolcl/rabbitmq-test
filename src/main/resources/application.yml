@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: rabbitmq
+  rabbitmq:
+    host: 111.231.100.226
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    #确认消息已发送到交换机(Exchange)
+    publisher-confirms: true
+    #确认消息已发送到队列(Queue)
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+        concurrency: 5
+        max-concurrency: 10
+        prefetch: 1
+
+server:
+  port: 8021

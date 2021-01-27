@@ -1,0 +1,17 @@
+#package file
+*.war
+*.ear
+
+#idea
+.idea/
+/iedea/
+*.ipr
+*.iml
+*.iws
+
+target/
+
+#eclipse ignore
+.settings/
+.project
+.classpatch
