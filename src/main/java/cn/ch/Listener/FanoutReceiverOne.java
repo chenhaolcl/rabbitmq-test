@@ -19,5 +19,6 @@ public class FanoutReceiverOne {
     @RabbitHandler
     public void process(Message message){
         System.out.println("FanoutReceiverOne收到消息：" + JsonUtils.objectToJson(message));
+        System.out.println("test");
 }
 }

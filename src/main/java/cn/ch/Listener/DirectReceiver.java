@@ -1,12 +1,19 @@
 package cn.ch.Listener;
 
-
-import cn.ch.pojo.Message;
+import cn.ch.pojo.entity.JujkLsJksqb;
 import cn.ch.utils.JsonUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.core.ExchangeTypes;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.*;
+import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @Classname DirectReceiver
@@ -15,15 +22,37 @@ import org.springframework.stereotype.Component;
  * @Author random
  */
 @Component
-@RabbitListener(queues = "TestDirectQueue")
 public class DirectReceiver {
 
-    @RabbitHandler
-    public void process(Message message, Channel channel, org.springframework.amqp.core.Message m) throws Exception{
-        System.out.println("第一个DirectReceiver消费者收到消息  : "+JsonUtils.objectToJson(message));
-        channel.basicAck(m.getMessageProperties().getDeliveryTag(),false);
-        channel.basicNack(m.getMessageProperties().getDeliveryTag(),false,false);
-        channel.basicReject(m.getMessageProperties().getDeliveryTag(),false);
+//    @RabbitListener(
+//            bindings = @QueueBinding(
+//                    value = @Queue(value = "TestDirectQueue", durable = "true"),
+//                    exchange = @Exchange(
+//                            value = "TestDirectExchange",
+//                            ignoreDeclarationExceptions = "true",
+//                            type = ExchangeTypes.DIRECT),
+//                    key = {"direct"}))
+//    public void process(cn.ch.pojo.Message message, Channel channel, org.springframework.amqp.core.Message m) throws Exception{
+//        System.out.println("第一个DirectReceiver消费者收到消息  : "+JsonUtils.objectToJson(message));
+//        System.out.println(m.getMessageProperties().getDeliveryTag());
+//        channel.basicAck(m.getMessageProperties().getDeliveryTag(),false);
+//    }
+
+    @RabbitListener(
+            bindings = @QueueBinding(
+                    value = @Queue(value = "TestDirectQueue", durable = "true"),
+                    exchange = @Exchange(
+                            value = "TestDirectExchange",
+                            ignoreDeclarationExceptions = "true",
+                            type = ExchangeTypes.DIRECT),
+                    key = {"direct"}))
+    public void process(String object, Channel channel, @Headers Map<String, Object> headers){
+        System.out.println("第一个DirectReceiver消费者收到消息  : "+ JsonUtils.jsonToPojo(object,JujkLsJksqb.class));
+        try {
+            channel.basicAck((Long)headers.get(AmqpHeaders.DELIVERY_TAG),false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,6 +1,10 @@
 package cn.ch.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +16,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class DirectRibbitConfig {
+
+//    @Autowired
+//    private ObjectMapper jacksonObjectMapper;
+
     @Bean
     public Queue DirectQueue(){
         //durable:是否持久化,默认是false,持久化队列：会被存储在磁盘上，当消息代理重启时仍然存在，暂存队列：当前连接有效
@@ -33,5 +41,8 @@ public class DirectRibbitConfig {
         return BindingBuilder.bind(DirectQueue()).to(DirectExchange()).with("direct");
     }
 
-
+//    @Bean
+//    public MessageConverter jackson2JsonMessageConverter() {
+//        return new Jackson2JsonMessageConverter(jacksonObjectMapper);
+//    }
 }

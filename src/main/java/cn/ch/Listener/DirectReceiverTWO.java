@@ -13,12 +13,11 @@ import org.springframework.stereotype.Component;
  * @Author random
  */
 @Component
-@RabbitListener(queues = "TestDirectQueue")
 public class DirectReceiverTWO {
 
-    @RabbitHandler
-    public void process(Message message){
-        System.out.println("第二个DirectReceiver消费者收到消息  : "+JsonUtils.objectToJson(message));
-    }
+//    @RabbitHandler
+//    public void process(Message message){
+//        System.out.println("第二个DirectReceiver消费者收到消息  : "+JsonUtils.objectToJson(message));
+//    }
 
 }

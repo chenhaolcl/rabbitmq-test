@@ -1,5 +1,6 @@
 package cn.ch.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,6 +68,11 @@ public class JsonUtils {
 		}
     	
     	return null;
+    }
+
+    public static <T> T convertJSONToObject(JSONObject json, Class<T> beanType)
+    {
+        return JSONObject.toJavaObject(json, beanType);
     }
     
 }
