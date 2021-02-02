@@ -2,6 +2,7 @@ package cn.ch.Listener;
 
 import cn.ch.pojo.entity.JujkLsJksqb;
 import cn.ch.utils.JsonUtils;
+import cn.ch.utils.JsonUtilss;
 import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.ExchangeTypes;
@@ -47,7 +48,8 @@ public class DirectReceiver {
                             type = ExchangeTypes.DIRECT),
                     key = {"direct"}))
     public void process(String object, Channel channel, @Headers Map<String, Object> headers){
-        System.out.println("第一个DirectReceiver消费者收到消息  : "+ JsonUtils.jsonToPojo(object,JujkLsJksqb.class));
+         JsonUtilss.jsonStr2Obj(object,JujkLsJksqb.class);
+        System.out.println("第一个DirectReceiver消费者收到消息  : "+ jujkLsJksqb);
         try {
             channel.basicAck((Long)headers.get(AmqpHeaders.DELIVERY_TAG),false);
         } catch (IOException e) {

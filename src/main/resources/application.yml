@@ -17,6 +17,15 @@ spring:
         concurrency: 5
         max-concurrency: 10
         prefetch: 1
+  #配置邮件信息
+  mail:
+      default-encoding: utf-8
+      # 主机地址
+      host: smtp.126.com
+      # 邮箱名
+      username: 13676623960@163.com
+      # 授权码（不是密码）
+      password: IFLSBMMNKGUMTFFV
 
 server:
   port: 8021
