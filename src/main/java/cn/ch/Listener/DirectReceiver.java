@@ -49,7 +49,6 @@ public class DirectReceiver {
                     key = {"direct"}))
     public void process(String object, Channel channel, @Headers Map<String, Object> headers){
          JsonUtilss.jsonStr2Obj(object,JujkLsJksqb.class);
-        System.out.println("第一个DirectReceiver消费者收到消息  : "+ jujkLsJksqb);
         try {
             channel.basicAck((Long)headers.get(AmqpHeaders.DELIVERY_TAG),false);
         } catch (IOException e) {
