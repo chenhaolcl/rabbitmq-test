@@ -26,6 +26,10 @@ spring:
       username: 13676623960@163.com
       # 授权码（不是密码）
       password: IFLSBMMNKGUMTFFV
-
+  redis:
+      database: 0
+          host: 111.231.100.226
+          port: 6379
+          password: CCWTNccwtn44223
 server:
   port: 8021
