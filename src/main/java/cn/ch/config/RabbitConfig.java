@@ -20,8 +20,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig{
 
-
-
     @Bean
     public RabbitTemplate createRabbitTemplate(ConnectionFactory connectionFactory){
         RabbitTemplate rabbitTemplate = new RabbitTemplate();
@@ -46,5 +44,10 @@ public class RabbitConfig{
         System.out.println("ReturnCallback:     "+"回应信息："+replyText);
         System.out.println("ReturnCallback:     "+"交换机："+exchange);
         System.out.println("ReturnCallback:     "+"路由键："+routingKey);
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter converter() {
+        return new Jackson2JsonMessageConverter();
     }
 }

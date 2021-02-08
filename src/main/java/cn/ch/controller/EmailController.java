@@ -1,9 +1,11 @@
 package cn.ch.controller;
 
+import cn.ch.service.MailService;
+import cn.ch.utils.JsonUtils;
 import cn.ch.utils.ServerResponse;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,19 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
     @Autowired
-    private JavaMailSender mailSender;
+    private MailService mailService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @GetMapping("mail")
     public ServerResponse send(){
+        SimpleMailMessage mail = mailService.createMail();
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        //发件人
-        message.setFrom("13676623960@163.com");
-        message.setTo("yt4259@126.com");
-        message.setSubject("springboot发送邮件");
-        message.setText("邮件内容");
-        message.setCc("920988438@qq.com");
-        mailSender.send(message);
+        rabbitTemplate.convertAndSend("emailExchange","email", mail);
         return ServerResponse.success();
     }
 }
