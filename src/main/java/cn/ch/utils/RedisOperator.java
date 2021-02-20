@@ -9,8 +9,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +30,40 @@ public class RedisOperator {
 	private StringRedisTemplate redisTemplate;
 	
 	// Key（键），简单的key-value操作
+
+
+	/**
+	 * 最终加强分布式锁
+	 * @param key key值
+	 * @return 是否获取到
+	 */
+	public boolean lock(String key) {
+		Duration duration = Duration.ofSeconds(60);
+		// 利用lambda表达式
+		return (Boolean) redisTemplate.execute(new RedisCallback<Object>() {
+			@Override
+			public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
+				long expireAt = System.currentTimeMillis() + duration.toMillis();
+				Boolean acquire = redisConnection.setNX(key.getBytes(), String.valueOf(expireAt).getBytes());
+				if (acquire) {
+					return true;
+				} else {
+					byte[] value = redisConnection.get(key.getBytes());
+					if (Objects.nonNull(value) && value.length > 0) {
+						long expireTime = Long.parseLong(new String(value));
+						if (expireTime < System.currentTimeMillis()) {
+							// 如果锁已经过期
+							byte[] oldValue = redisConnection.getSet(key.getBytes(), String.valueOf(System.currentTimeMillis() + duration.toMillis()).getBytes());
+							// 防止死锁
+							return Long.parseLong(new String(oldValue)) < System.currentTimeMillis();
+						}
+					}
+				}
+				return false;
+			}
+		});
+	}
+
 
 	/**
 	 * 实现命令：TTL key，以秒为单位，返回给定 key的剩余生存时间(TTL, time to live)。
