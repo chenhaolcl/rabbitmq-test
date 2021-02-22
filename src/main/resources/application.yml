@@ -1,6 +1,13 @@
 spring:
   application:
     name: rabbitmq
+  #mysql数据库配置
+  datasource:
+    #mysql驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rabbitmq-test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: CMBJXcmbjx12423
   rabbitmq:
     host: 111.231.100.226
     port: 5672
@@ -27,9 +34,13 @@ spring:
       # 授权码（不是密码）
       password: IFLSBMMNKGUMTFFV
   redis:
-      database: 0
-          host: 111.231.100.226
-          port: 6379
-          password: CCWTNccwtn44223
+    database: 0
+    host: 111.231.100.226
+    port: 6379
+    password: CCWTNccwtn44223
+#  mybatis:
+#    type-aliases-package: cn.ch.mybatisplus           # 所有POJO类所在包路径
+#    mapper-locations: classpath:mapper/*.xml          # mapper映射文件
+
 server:
   port: 8021
