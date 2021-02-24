@@ -30,6 +30,15 @@ public class DirectRibbitConfig {
     }
 
     @Bean
+    public Queue emailQueue(){
+        //durable:是否持久化,默认是false,持久化队列：会被存储在磁盘上，当消息代理重启时仍然存在，暂存队列：当前连接有效
+        // exclusive:默认也是false，只能被当前创建的连接使用，而且当连接关闭后队列即被删除。此参考优先级高于durable
+        // autoDelete:是否自动删除，当没有消费者监听此队列，该队列会自动删除。
+        //一般设置一下队列的持久化就好,其余两个就是默认false
+        return new Queue("emailQueue",true);
+    }
+
+    @Bean
     public DirectExchange DirectExchange(){
         //durable:是否持久化,默认是false,持久化交换机：会被存储在磁盘上，当消息代理重启时仍然存在，暂存：当前连接有效
         // autoDelete:是否自动删除，当没有队列连接，该交换机会自动删除。
@@ -37,9 +46,23 @@ public class DirectRibbitConfig {
     }
 
     @Bean
+    public DirectExchange emailExchange(){
+        //durable:是否持久化,默认是false,持久化交换机：会被存储在磁盘上，当消息代理重启时仍然存在，暂存：当前连接有效
+        // autoDelete:是否自动删除，当没有队列连接，该交换机会自动删除。
+        return new DirectExchange("emailExchange",true,false);
+    }
+
+
+    @Bean
     public Binding bindingDirect(){
         return BindingBuilder.bind(DirectQueue()).to(DirectExchange()).with("direct");
     }
+
+    @Bean
+    public Binding bindingEmail(){
+        return BindingBuilder.bind(emailQueue()).to(emailExchange()).with("email");
+    }
+
 
 //    @Bean
 //    public MessageConverter jackson2JsonMessageConverter() {
