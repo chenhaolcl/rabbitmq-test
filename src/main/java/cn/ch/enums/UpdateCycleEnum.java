@@ -20,7 +20,9 @@ public enum UpdateCycleEnum {
     SEASON("4", "季"),
     HALFYEAR("5", "半年"),
     YEAR("6", "年"),
-    WEEK("7", "周");
+    WEEK("7", "周"),
+    CUSTOMIZE("8","自定义"),
+    JISHI("9","即时");
 
     private String key;
     private String value;
